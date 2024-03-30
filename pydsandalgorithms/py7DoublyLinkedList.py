@@ -215,10 +215,10 @@ class DoublyLinkedList():
     
     # use recursive algorithm tho count number of items in list
     def sizeOfListRec(self, node):
-        '''
-        @param node : node that you want to count from to the end
-        @return : None
-        '''
+        """
+        @param [node] : node that you want to count from to the end
+        
+        """    
 
         if node is None:
             return 0
