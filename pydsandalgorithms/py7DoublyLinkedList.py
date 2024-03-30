@@ -31,6 +31,9 @@
 # Chèn thêm vào phía trước 1 node cụ thể.
 
 
+# for garbage collection
+import gc
+
 # Thao tác
 class Node():
 
@@ -98,7 +101,7 @@ class DoublyLinkedList():
 
         # step 7:
         if new_node.next is not None:
-            prev_node.next.prev = new_node
+            new_node.next.prev = new_node
                 
     def append(self, data):
 
@@ -164,7 +167,64 @@ class DoublyLinkedList():
             before_node.prev.next = new_node
             before_node.prev = new_node
                     
+    def deleteNode(self, delete_node):
+        """ Thuat toan :
+            Step 1 : if delete_node is head_node:
+                Step 1.1 : Set head pointer to next_node of delete_node
+                Step 1.2 : Set   
+        """
+        if (not delete_node):
+            return
+        
+        head = self.head
+        
+        # 1 > 2 > 3 ==> 2 > 3
+        # delete node is head node
+        if delete_node == head:
+            next = head.next
+            next.prev = None                        
+            delete_node = None
+            self.head = next            
+        else: # delete node is different from head node
+            prev = delete_node.prev            
+            next = delete_node.next 
+            
+            # release delete_node from memory 
+            delete_node = None                       
+                                         
+            if (next):
+                next.prev = prev          
 
+            prev.next = next                                
+
+        # call the python garbage collection
+        gc.collect()
+                    
+
+    # use while loop to count size of list
+    def sizeOfList(self):
+
+        temp = self.head        
+        size = 0
+                
+        while(temp):
+            size += 1
+            temp = temp.next
+
+        return size
+    
+    # use recursive algorithm tho count number of items in list
+    def sizeOfListRec(self, node):
+        '''
+        @param node : node that you want to count from to the end
+        @return : None
+        '''
+
+        if node is None:
+            return 0
+        
+        return 1 + self.sizeOfListRec(node.next)
+                            
     def printList(self):
         """ print data of Doubly Linked List from head node
             if Dll is None --> Print empty msg
@@ -181,20 +241,40 @@ class DoublyLinkedList():
             temp = temp.next
 
 
-
 if __name__=="__main__":
     
     dll = DoublyLinkedList()
     dll.push(3) # 3
-    dll.push(1) # 1 > 3     
+    dll.push(1) # 1 > 3  
+
     dll.insertAfter(data = 2, prev_node = dll.head)  # 
     dll.append(10)
     dll.append(11)    
     dll.insertBefore(data = 0,before_node = dll.head)
     a = dll.head.next.next.next.next
     dll.insertBefore(data = 4, before_node = a)   
-    b = dll.head.next.next.next.next.next.next    
-    print(b.data)
+    b = dll.head.next.next.next.next.next.next        
     dll.insertBefore(data = 10.5, before_node = b)   
-    dll.printList()    
+    dll.printList()    # 0 > 1 > 2 > 3 > 4 > 10 > 10.5 > 11
+
+    print('----------delete test---------')
+    dll.deleteNode(dll.head) 
+    dll.printList() # 1 > 2 > 3 > 4 > 10 > 10.5 > 11
+
+    print('----------delete middle node test---------')    
+    midle = dll.head.next
+    print('head.next :' , midle.data)
+    print('head.next.prev.data', midle.prev.data)
+    print('head.next.next.data', midle.next.data)
+
+    dll.deleteNode(midle)    
+    dll.printList()
+    size = dll.sizeOfList()
+    print(f"size of list is: {size}") # 6
+
+    print('---------------count-size-by-recursive---')
+    sizeRec = dll.sizeOfListRec(dll.head.next)
+    print(f"count-size-by-recursive : {sizeRec}")
+
+
 
