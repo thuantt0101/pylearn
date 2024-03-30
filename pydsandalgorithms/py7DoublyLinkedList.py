@@ -224,7 +224,26 @@ class DoublyLinkedList():
             return 0
         
         return 1 + self.sizeOfListRec(node.next)
-                            
+
+    def reverseList(self):
+
+        # present    : 1 > 2 > 3 > 4
+        # want to be : 4 > 3 > 2 > 1
+        
+        temp = self.head
+        
+        while(temp):
+            next = temp.next
+
+            temp.next = temp.prev
+            temp.prev = next
+
+            if next is None:
+                self.head = temp
+
+            temp = next            
+            
+                                                
     def printList(self):
         """ print data of Doubly Linked List from head node
             if Dll is None --> Print empty msg
@@ -275,6 +294,10 @@ if __name__=="__main__":
     print('---------------count-size-by-recursive---')
     sizeRec = dll.sizeOfListRec(dll.head.next)
     print(f"count-size-by-recursive : {sizeRec}")
+
+    print('-----------reverse list-----')
+    dll.reverseList()
+    dll.printList()
 
 
 
