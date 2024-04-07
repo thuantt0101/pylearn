@@ -1,56 +1,18 @@
 
-# So với Linked List thì Doubly Linked List sẽ chứa thêm 1 con trỏ phụ, thường được gọi là previous pointer.
-# ( Con trỏ trỏ đến node trước đó ), con trỏ previous pointer này cùng với next pointer and data chứa dữ liệu/ giá trị
-# của node ( 2 thành phần này đều nằm trong 1 node của linked list thông thường ) sẽ là những thành phần tạo nên 
-# doubly linked list
-
-# Advantage of DLL
-
-# 1. Chúng ta có thể duyệt duyệt xuôi chiều, hoặc ngược chiều trên danh sách đều được
-# 2. Thao tác delete Node trong DLL sẽ hiệu quả hơn vì chúng ta có được con trỏ đến Node cần xoá 
-# 3. Chúng ta có thể chèn thêm 1 node mới vào trước 1 node cụ thể nào đó một cách nhanh chóng. 
-# trong linked list thông thường, để xoá 1 node chúng ta cần phải biết được con trỏ trỏ đến
-# node nằm trước node muốn xoá, đôi khi chúng ta phải duyệt cả danh sách.
-# Trong DLL, chúng ta có thể có được node trước node cần xoá bằng cách dùng con trỏ previous node.
-
-
-# Dis-Advantage of DLL vs Linked List
-
-# 1. Mọi node nằm trong DLL đều yêu cầu thêm không gian dành cho một con trỏ previus. Tuy nhiên ta vẫn có thể
-# cài đặt DLL với 1 con trỏ duy nhất , vẫn có cách làm điều đó.
-
-# 2. Tất cả các thao tác đều yêu cầu phải duy trì thêm một con trỏ là previous. Ví dụ khi thực hiện chèn thêm
-# 1 node vào DLL, chúng ta phải chỉnh con trỏ previos cùng với các con trỏ next. 
-
-
-# Thao tác chèn thêm 1 node mới vào DLL
-
-# Chèn thêm vào đầu DLL
-# Chèn thêm vào phía sau 1 node cụ thể
-# Chèn thêm vào cuối DLL
-# Chèn thêm vào phía trước 1 node cụ thể.
-
-
-# for garbage collection
 import gc
 
-# Thao tác
 class Node():
 
-    def __init__(self, data = None, next = None, prev = None):
-
-        self.data = data       
-        self.next = next # pointer to the next node        
-        self.prev = prev # pointer to the previous node
-
+    def __init__(self, data = None, prev = None, next = None):
+        self.data = data
+        self.prev = prev
+        self.next = next
+    
 
 class DoublyLinkedList():
 
     def __init__(self):
-
-        self.head = None # head Node ( Con trỏ head )
-
-    
+        self.head = None
     # Push new node to the head of Doubly Linked List
     def push(self, data):        
         """ Thuật toán
@@ -243,7 +205,61 @@ class DoublyLinkedList():
 
             temp = next            
 
-                                                
+
+    # A utility function to find last node of linked list
+    def lastNode(self, node):
+        
+        while(node.next != None):
+            node = node.next
+        
+        return node
+
+    # Considers last element as pivot, places the pivot element at its
+    # correct position in sorted array, and places all smaller (smaller than
+    # pivot) to left of pivot and all greater elements to right of pivot 
+    def partition(self, l , h):
+
+        # set pivot as h element
+        pivot = h.data
+
+        # similar to i = l-1 for array implementation
+        i = l.prev
+
+        j = l
+
+        while j != h :
+
+            if j.data <= pivot:
+
+                i = l if (i == None) else i.next
+                temp = i.data
+                i.data = j.data
+                j.data = temp
+            j = j.next
+
+        i = l if (i == None) else i.next
+        temp = i.data
+        i.data = h.data
+        h.data = temp
+
+        return i
+    
+    # A recursive implementation of quicksort for linked list 
+    def _quickSort(self, left, right):
+
+        if right != None and left != right and left !=right.next:
+            temp = self.partition(left, right)
+            self._quickSort(left, temp.prev)
+            self._quickSort(temp.next , right)
+
+    def quickSort(self, node):
+
+        # Find last node
+        head = self.lastNode(node)
+
+        self._quickSort(node, head)
+
+
     def printList(self):
         """ print data of Doubly Linked List from head node
             if Dll is None --> Print empty msg
@@ -257,47 +273,17 @@ class DoublyLinkedList():
 
         while(temp):
             print(temp.data)        
-            temp = temp.next
+            temp = temp.next                 
+        
 
-
-if __name__=="__main__":
+if __name__ =='__main__':
     
     dll = DoublyLinkedList()
-    dll.push(3) # 3
-    dll.push(1) # 1 > 3  
-
-    dll.insertAfter(data = 2, prev_node = dll.head)  # 
-    dll.append(10)
-    dll.append(11)    
-    dll.insertBefore(data = 0,before_node = dll.head)
-    a = dll.head.next.next.next.next
-    dll.insertBefore(data = 4, before_node = a)   
-    b = dll.head.next.next.next.next.next.next        
-    dll.insertBefore(data = 10.5, before_node = b)   
-    dll.printList()    # 0 > 1 > 2 > 3 > 4 > 10 > 10.5 > 11
-
-    print('----------delete test---------')
-    dll.deleteNode(dll.head) 
-    dll.printList() # 1 > 2 > 3 > 4 > 10 > 10.5 > 11
-
-    print('----------delete middle node test---------')    
-    midle = dll.head.next
-    print('head.next :' , midle.data)
-    print('head.next.prev.data', midle.prev.data)
-    print('head.next.next.data', midle.next.data)
-
-    dll.deleteNode(midle)    
+    dll.push(10)
+    dll.push(5)
+    dll.push(30)
+    dll.push(2)
+    dll.quickSort(dll.head)    
     dll.printList()
-    size = dll.sizeOfList()
-    print(f"size of list is: {size}") # 6
-
-    print('---------------count-size-by-recursive---')
-    sizeRec = dll.sizeOfListRec(dll.head.next)
-    print(f"count-size-by-recursive : {sizeRec}")
-
-    print('-----------reverse list-----')
-    dll.reverseList()
-    dll.printList()
-
 
 

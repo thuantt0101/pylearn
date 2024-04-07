@@ -138,7 +138,7 @@ def quickSortAsc(numbers, left, right):
         
         while( arr[j] > pivot ):
             j = j - 1
-            
+
         if ( i <= j ):
             temp = arr[i]
             arr[i] = arr[j]
@@ -227,22 +227,118 @@ def quickSort(numbers, left, right, typeOrder = None):
             j += -1        
             
 
+def quickSortWithLastItem(numbers, left, right):
+
+    if numbers is None:
+        return
+    
+    if left >= right:
+        return
+    
+    # Chọn phần tử pivot là phần tử cuối cùng của mảng
+    lastItem = right
+    pivot    = numbers[lastItem]
+    i, j = left, right
+
+    while( i <= j):
+
+        while( numbers[i] < pivot):
+            i = i + 1
+
+        while ( numbers[j] > pivot ):
+            j += 1
+
+        # swap
+        if ( i <= j):
+            temp = numbers[i]
+            numbers[i] = numbers[j]
+            numbers[j] = temp
+
+            i += 1
+            j -= 1
+        
+    
+    if left <= j:
+        quickSortWithLastItem(numbers, left, j)
+    
+    if right >= i:
+        quickSortWithLastItem(numbers, i, right)
+
+"""A typical recursive implementation of Quicksort for array """
+  
+""" This function takes last element as pivot, 
+   places the pivot element at its correct 
+   position in sorted array, and places all 
+   smaller (smaller than pivot) to left of
+   pivot and all greater elements to right 
+   of pivot 
+"""
+ 
+"""
+ i --> is the first index in the array
+ x --> is the last index in the array
+ tmp --> is a temporary variable for swapping values (integer)
+"""
+
+def partition(arr, left, right):
+
+    pivot = arr[right]
+    pointer = left - 1
+
+    for j in range(left, right):
+
+        if arr[j] < pivot:
+            pointer +=1
+            temp = arr[pointer]
+            arr[pointer] = arr[j]
+            arr[j] = temp
+
+    temp = arr[pointer + 1]
+    arr[pointer + 1] = arr[right]
+    arr[right] = temp
+
+    return pointer + 1
+
+def quickSort2(arr, left, right):
+    
+    if left < right:
+        p = partition(arr, left, right)
+        quickSort2(arr, left, p - 1)
+        quickSort2(arr, p + 1, right)
+
+
+
+
 if __name__=="__main__":
     
-    arr = [3, 6, 7, 9, 12, 13, 14, 15, 21]      
+    # arr = [3, 6, 7, 9, 12, 13, 14, 15, 21]      
+    # left = 0
+    # right = len(arr) - 1
+        
+    # quickSort(arr, left, right)    
+    # print(arr)
+
+    # arr = [3, 6, 7, 9, 12, 13, 14, 15, 21]      
+    # left = 0
+    # right = len(arr) - 1
+        
+    # quickSort(arr, left, right, 'Desc')    
+    # print(arr)
+
+    # arr = [3, 6, 7, 9, 12, 13, 14, 15, 21]      
+    # left = 0
+    # right = len(arr) - 1 
+    # quickSortWithLastItem(arr, left, right)   
+    # print(arr)
+
+    # 3, 6, 4,  7, 9, 12, 13 , 15, |5|
+    # 3, |4|, 5, 7, 9, 12, 13, 15, |6|
+    # 3, 4, 5,   
+    arr = [3, 6, 4,  7, 1, 2, 13 , 15, 5]      
     left = 0
     right = len(arr) - 1
-        
-    quickSort(arr, left, right)    
+    quickSort2(arr, left, right)
     print(arr)
-
-    arr = [3, 6, 7, 9, 12, 13, 14, 15, 21]      
-    left = 0
-    right = len(arr) - 1
-        
-    quickSort(arr, left, right, 'Desc')    
-    print(arr)
-
 
 
 
