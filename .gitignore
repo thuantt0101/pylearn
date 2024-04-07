@@ -1,0 +1,11 @@
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# Secret file
+*secret.txt
+
+# virtual environment file
+# To ignore an entire directory with all its contents, you need to include the name of the directory with the slash / at the end:
